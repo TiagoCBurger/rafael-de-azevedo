@@ -1,55 +1,124 @@
-const columns = [
-  {
-    title: "Produto",
-    links: ["Recursos", "Preços", "Integrações", "Novidades"],
-  },
-  {
-    title: "Empresa",
-    links: ["Sobre", "Carreiras", "Blog", "Contato"],
-  },
-  {
-    title: "Legal",
-    links: ["Privacidade", "Termos de uso", "Cookies"],
-  },
+import Logo from "@/components/Logo";
+import Container from "@/components/ui/Container";
+import {
+  InstagramIcon,
+  LinkedInIcon,
+  MailIcon,
+  MonitorIcon,
+  PhoneIcon,
+  WhatsAppIcon,
+} from "@/components/icons";
+import { site, whatsappUrl } from "@/lib/site";
+
+const practiceAreas = [
+  "Demissão",
+  "Horas extras",
+  "Acidente de trabalho",
+  "Doença do trabalho",
+  "Assédio",
+  "FGTS",
+  "Rescisão indireta",
+];
+
+const socials = [
+  { icon: InstagramIcon, href: site.social.instagram, label: "Instagram" },
+  { icon: LinkedInIcon, href: site.social.linkedin, label: "LinkedIn" },
+  { icon: WhatsAppIcon, href: whatsappUrl(), label: "WhatsApp" },
 ];
 
 export default function Footer() {
   return (
-    <footer className="mt-auto border-t border-border">
-      <div className="mx-auto max-w-6xl px-6 py-16">
-        <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
-          <div className="col-span-2 sm:col-span-1">
-            <span className="text-lg font-semibold tracking-tight">
-              SuaMarca
-            </span>
-            <p className="mt-3 text-sm text-muted">
-              Simplifique seu fluxo de trabalho e cresça mais rápido.
+    <footer className="mt-auto bg-ink-deep">
+      <Container className="py-14">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr_auto] lg:gap-12">
+          <div>
+            <Logo />
+            <p className="mt-6 max-w-[230px] text-[12px] leading-[1.7] text-cream/45">
+              Atendimento trabalhista com clareza, respeito e responsabilidade.
             </p>
           </div>
 
-          {columns.map((column) => (
-            <div key={column.title}>
-              <h4 className="text-sm font-semibold">{column.title}</h4>
-              <ul className="mt-4 flex flex-col gap-3">
-                {column.links.map((link) => (
-                  <li key={link}>
-                    <a
-                      href="#"
-                      className="text-sm text-muted transition-colors hover:text-foreground"
-                    >
-                      {link}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
+          <div>
+            <h3 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gold-light">
+              Áreas principais
+            </h3>
+            <ul className="mt-5 flex flex-col gap-2.5">
+              {practiceAreas.map((area) => (
+                <li key={area}>
+                  <a
+                    href="#problemas"
+                    className="text-[12.5px] text-cream/55 transition-colors hover:text-gold-light"
+                  >
+                    {area}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-        <div className="mt-12 border-t border-border pt-8 text-sm text-muted">
-          © {new Date().getFullYear()} SuaMarca. Todos os direitos
-          reservados.
+          <div>
+            <h3 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gold-light">
+              Contato
+            </h3>
+            <ul className="mt-5 flex flex-col gap-3.5">
+              <li>
+                <a
+                  href={`tel:+${site.whatsapp}`}
+                  className="flex items-center gap-3 text-[12.5px] text-cream/55 transition-colors hover:text-gold-light"
+                >
+                  <PhoneIcon className="size-4 shrink-0 text-gold-light/80" />
+                  {site.phoneLabel}
+                </a>
+              </li>
+              <li>
+                <a
+                  href={`mailto:${site.email}`}
+                  className="flex items-center gap-3 text-[12.5px] text-cream/55 transition-colors hover:text-gold-light"
+                >
+                  <MailIcon className="size-4 shrink-0 text-gold-light/80" />
+                  {site.email}
+                </a>
+              </li>
+              <li className="flex items-center gap-3 text-[12.5px] text-cream/55">
+                <MonitorIcon className="size-4 shrink-0 text-gold-light/80" />
+                Atendimento on-line
+              </li>
+            </ul>
+          </div>
+
+          <ul className="flex gap-3">
+            {socials.map(({ icon: Icon, href, label }) => (
+              <li key={label}>
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="flex size-10 items-center justify-center rounded-full border border-gold/30 text-gold-light transition-colors hover:border-gold hover:bg-gold/10"
+                >
+                  <Icon className="size-[18px]" />
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
+      </Container>
+
+      <div className="border-t border-white/[0.07]">
+        <Container className="flex flex-col items-center justify-center gap-4 py-5 sm:flex-row sm:gap-10">
+          <a
+            href="#"
+            className="text-[11.5px] text-cream/40 transition-colors hover:text-gold-light"
+          >
+            Política de Privacidade
+          </a>
+          <a
+            href="#"
+            className="text-[11.5px] text-cream/40 transition-colors hover:text-gold-light"
+          >
+            Termos de Uso
+          </a>
+        </Container>
       </div>
     </footer>
   );

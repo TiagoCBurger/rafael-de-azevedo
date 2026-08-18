@@ -1,12 +1,13 @@
+import DirectService from "@/components/DirectService";
+import FaqAndForm from "@/components/FaqAndForm";
+import FinalCta from "@/components/FinalCta";
+import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
-import LogoCloud from "@/components/LogoCloud";
-import Features from "@/components/Features";
-import Testimonials from "@/components/Testimonials";
-import Pricing from "@/components/Pricing";
-import Faq from "@/components/Faq";
-import CtaBanner from "@/components/CtaBanner";
-import Footer from "@/components/Footer";
+import HowItWorks from "@/components/HowItWorks";
+import Problems from "@/components/Problems";
+import SpecificService from "@/components/SpecificService";
+import TrustBanner from "@/components/TrustBanner";
 
 export default function Home() {
   return (
@@ -14,12 +15,13 @@ export default function Home() {
       <Header />
       <main className="flex-1">
         <Hero />
-        <LogoCloud />
-        <Features />
-        <Testimonials />
-        <Pricing />
-        <Faq />
-        <CtaBanner />
+        <TrustBanner />
+        <DirectService />
+        <Problems />
+        <SpecificService />
+        <HowItWorks />
+        <FaqAndForm />
+        <FinalCta />
       </main>
       <Footer />
     </>

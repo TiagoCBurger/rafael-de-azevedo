@@ -1,47 +1,43 @@
-import Link from "next/link";
+import Logo from "@/components/Logo";
+import Button from "@/components/ui/Button";
+import Container from "@/components/ui/Container";
+import { WhatsAppIcon } from "@/components/icons";
+import { whatsappUrl } from "@/lib/site";
 
-const navLinks = [
-  { href: "#recursos", label: "Recursos" },
-  { href: "#depoimentos", label: "Depoimentos" },
-  { href: "#precos", label: "Preços" },
-  { href: "#faq", label: "Perguntas" },
+const nav = [
+  { href: "#inicio", label: "Início" },
+  { href: "#problemas", label: "Problemas atendidos" },
+  { href: "#como-funciona", label: "Como funciona" },
+  { href: "#sobre", label: "Sobre o advogado" },
+  { href: "#duvidas", label: "Dúvidas" },
 ];
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 border-b border-border/80 bg-background/80 backdrop-blur-sm">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <Link href="#" className="text-lg font-semibold tracking-tight">
-          SuaMarca
-        </Link>
+    <header className="sticky top-0 z-50 border-b border-white/[0.07] bg-ink/95 backdrop-blur">
+      <Container className="flex h-20 items-center justify-between gap-6">
+        <a href="#inicio" aria-label={`${"Raphael de Azevedo"} — início`}>
+          <Logo />
+        </a>
 
-        <nav className="hidden items-center gap-8 md:flex">
-          {navLinks.map((link) => (
+        <nav className="hidden items-center gap-7 lg:flex">
+          {nav.map((item) => (
             <a
-              key={link.href}
-              href={link.href}
-              className="text-sm text-muted transition-colors hover:text-foreground"
+              key={item.href}
+              href={item.href}
+              className="text-[13px] text-cream/70 transition-colors hover:text-gold-light"
             >
-              {link.label}
+              {item.label}
             </a>
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
-          <a
-            href="#"
-            className="hidden text-sm font-medium text-muted transition-colors hover:text-foreground sm:inline-block"
-          >
-            Entrar
-          </a>
-          <a
-            href="#comecar"
-            className="rounded-full bg-brand px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-dark"
-          >
-            Começar grátis
-          </a>
-        </div>
-      </div>
+        <Button href={whatsappUrl()} size="sm" className="shrink-0">
+          <span className="hidden sm:inline">Falar com o advogado</span>
+          <span className="sm:hidden">WhatsApp</span>
+          <WhatsAppIcon className="size-4" />
+        </Button>
+      </Container>
     </header>
   );
 }
