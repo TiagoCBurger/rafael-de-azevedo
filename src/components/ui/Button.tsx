@@ -4,7 +4,7 @@ type Variant = "solid" | "outlineDark" | "outlineLight";
 type Size = "sm" | "md" | "lg";
 
 const base =
-  "inline-flex items-center justify-center gap-2.5 rounded-sm font-semibold uppercase tracking-[0.08em] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-light";
+  "btn-shine relative inline-flex items-center justify-center gap-2.5 overflow-hidden rounded-sm font-semibold uppercase tracking-[0.1em] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-light";
 
 const variants: Record<Variant, string> = {
   /** Dourado preenchido — CTA principal, funciona em fundo claro e escuro. */

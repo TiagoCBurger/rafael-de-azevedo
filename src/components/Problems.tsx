@@ -63,34 +63,42 @@ const problems = [
 
 export default function Problems() {
   return (
-    <section id="problemas" className="bg-cream-soft py-16 text-ink sm:py-20">
+    <section id="problemas" className="bg-cream-soft py-20 text-ink sm:py-24">
       <Container>
         <div className="text-center">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-gold-ink">
-            Problemas trabalhistas
-          </p>
-          <h2 className="mx-auto mt-4 max-w-4xl font-serif text-[28px] leading-[1.2] text-ink sm:text-[33px]">
+          <div data-reveal="up" className="flex items-center justify-center gap-3">
+            <span data-draw className="inline-block h-px w-8 origin-left bg-gold" />
+            <p className="eyebrow text-gold-ink">Problemas trabalhistas</p>
+            <span data-draw className="inline-block h-px w-8 origin-right bg-gold" />
+          </div>
+          <h2
+            data-split="words"
+            className="section-title mx-auto mt-5 max-w-3xl text-[1.85rem] text-ink sm:text-[2.25rem]"
+          >
             Veja algumas situações em que o advogado pode ajudar
           </h2>
-          <p className="mt-4 text-[13px] text-ink/55">
+          <p data-reveal="up" className="mt-5 text-[0.95rem] text-ink/55">
             Não encontrou o seu problema? Entre em contato e explique o que
             aconteceu.
           </p>
         </div>
 
-        <ul className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+        <ul
+          data-reveal-stagger
+          className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+        >
           {problems.map(({ icon: Icon, title, description, cta, message }) => (
             <li
               key={title}
-              className="flex flex-col border border-ink/10 bg-white p-6 transition-colors hover:border-gold/50"
+              className="lift-card flex flex-col border border-ink/10 bg-white p-7 hover:border-gold/50"
             >
               <Icon className="size-7 text-gold-ink" />
 
-              <h3 className="mt-5 font-serif text-[16px] leading-[1.35] text-ink">
+              <h3 className="section-title mt-6 text-[1.2rem] leading-[1.3] text-ink">
                 {title}
               </h3>
 
-              <p className="mt-3 flex-1 text-[12.5px] leading-[1.65] text-ink/55">
+              <p className="mt-3 flex-1 text-[0.9rem] leading-[1.7] text-ink/55">
                 {description}
               </p>
 
@@ -98,10 +106,10 @@ export default function Problems() {
                 href={whatsappUrl(message)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-6 flex items-center justify-between gap-3 text-[12px] font-medium text-gold-ink transition-colors hover:text-gold-dark"
+                className="group mt-7 flex items-center justify-between gap-3 text-[0.8125rem] font-medium text-gold-ink transition-colors hover:text-gold-dark"
               >
                 {cta}
-                <ArrowRightIcon className="size-3.5" />
+                <ArrowRightIcon className="size-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
               </a>
             </li>
           ))}

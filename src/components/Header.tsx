@@ -14,18 +14,21 @@ const nav = [
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 border-b border-white/[0.07] bg-ink/95 backdrop-blur">
-      <Container className="flex h-20 items-center justify-between gap-6">
-        <a href="#inicio" aria-label={`${"Raphael de Azevedo"} — início`}>
+    <header
+      data-site-header
+      className="sticky top-0 z-50 border-b border-white/[0.07] bg-ink/95 backdrop-blur-md"
+    >
+      <Container className="header-inner flex h-20 items-center justify-between gap-6">
+        <a href="#inicio" aria-label="Raphael de Azevedo — início">
           <Logo />
         </a>
 
-        <nav className="hidden items-center gap-7 lg:flex">
+        <nav data-reveal-stagger="load" className="hidden items-center gap-7 lg:flex">
           {nav.map((item) => (
             <a
               key={item.href}
               href={item.href}
-              className="text-[13px] text-cream/70 transition-colors hover:text-gold-light"
+              className="nav-link text-[0.8125rem] tracking-wide text-cream/70 transition-colors hover:text-gold-light"
             >
               {item.label}
             </a>

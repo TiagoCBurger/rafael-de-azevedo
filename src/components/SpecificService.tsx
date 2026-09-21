@@ -23,8 +23,10 @@ const segments = [
 export default function SpecificService() {
   return (
     <section className="relative isolate overflow-hidden bg-ink-deep">
-      {/* Cenário de fundo bem esmaecido */}
-      <div className="pointer-events-none absolute inset-0 -z-10 opacity-[0.18]">
+      <div
+        data-parallax="8"
+        className="pointer-events-none absolute inset-0 -z-10 opacity-[0.18]"
+      >
         <MediaSlot
           src={media.specialties}
           alt=""
@@ -35,33 +37,44 @@ export default function SpecificService() {
       </div>
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(180deg,var(--color-ink-deep)_0%,rgba(9,13,16,0.6)_45%,var(--color-ink-deep)_100%)]" />
 
-      <Container className="py-16 sm:py-20">
+      <Container className="py-20 sm:py-24">
         <div className="text-center">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-gold-light">
-            Atendimento específico
-          </p>
-          <h2 className="mx-auto mt-4 max-w-3xl font-serif text-[28px] leading-[1.2] text-cream sm:text-[33px]">
+          <div data-reveal="up" className="flex items-center justify-center gap-3">
+            <span data-draw className="inline-block h-px w-8 origin-left bg-gold" />
+            <p className="eyebrow text-gold-light">Atendimento específico</p>
+            <span data-draw className="inline-block h-px w-8 origin-right bg-gold" />
+          </div>
+          <h2
+            data-split="words"
+            className="section-title mx-auto mt-5 max-w-3xl text-[1.85rem] text-cream sm:text-[2.25rem]"
+          >
             Bancários e trabalhadores do setor de petróleo
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-[13px] leading-relaxed text-cream/50">
+          <p
+            data-reveal="up"
+            className="mx-auto mt-5 max-w-2xl text-[0.95rem] leading-relaxed text-cream/50"
+          >
             Algumas profissões possuem regras diferentes sobre horário,
             pagamento, adicionais e condições de trabalho.
           </p>
         </div>
 
-        <ul className="mx-auto mt-12 grid max-w-3xl grid-cols-1 gap-5 md:grid-cols-2">
+        <ul
+          data-reveal-stagger
+          className="mx-auto mt-14 grid max-w-3xl grid-cols-1 gap-6 md:grid-cols-2"
+        >
           {segments.map(({ icon: Icon, title, description, cta, message }) => (
             <li
               key={title}
-              className="flex flex-col border border-gold/25 bg-ink/70 p-7 backdrop-blur-sm transition-colors hover:border-gold/55"
+              className="lift-card-dark flex flex-col border border-gold/25 bg-ink/70 p-8 backdrop-blur-sm transition-colors hover:border-gold/55"
             >
               <Icon className="size-8 text-gold-light" />
 
-              <h3 className="mt-5 font-serif text-[18px] leading-[1.3] text-cream">
+              <h3 className="section-title mt-6 text-[1.3rem] leading-[1.3] text-cream">
                 {title}
               </h3>
 
-              <p className="mt-3 flex-1 text-[12.5px] leading-[1.65] text-cream/50">
+              <p className="mt-3 flex-1 text-[0.9rem] leading-[1.7] text-cream/50">
                 {description}
               </p>
 
@@ -69,7 +82,7 @@ export default function SpecificService() {
                 href={whatsappUrl(message)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-6 inline-flex items-center gap-2 text-[12px] font-medium text-gold-light transition-colors hover:text-cream"
+                className="mt-7 inline-flex items-center gap-2 text-[0.8125rem] font-medium text-gold-light transition-colors hover:text-cream"
               >
                 {cta}
                 <ArrowRightIcon className="size-3.5" />

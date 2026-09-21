@@ -16,24 +16,59 @@
   --color-gold-light: #d5ba8a;
   --color-gold-ink: #8a6a2e;
 
-  --font-sans: var(--font-inter);
-  --font-serif: var(--font-playfair);
+  --font-sans: var(--font-outfit);
+  --font-serif: var(--font-cormorant);
 }
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 5rem;
+  scroll-padding-top: 5.5rem;
 }
 
 body {
   background-color: var(--color-ink);
   color: var(--color-cream);
   font-family: var(--font-sans);
+  font-feature-settings: "kern" 1, "liga" 1;
 }
 
 ::selection {
   background-color: var(--color-gold);
   color: #fff;
+}
+
+em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 500;
+}
+
+.eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.display-title {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  letter-spacing: -0.028em;
+  line-height: 1.06;
+}
+
+.section-title {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.14;
+}
+
+/* SplitText: cada glifo precisa ser bloco para o stagger vertical */
+.char,
+.word {
+  display: inline-block;
+  backface-visibility: hidden;
 }
 
 /* Marcador nativo do <details> some — usamos o ícone "+" próprio */
@@ -44,4 +79,137 @@ summary::-webkit-details-marker {
 /* Enquanto nenhuma opção real for escolhida, o <select> se lê como placeholder */
 select:has(option[value=""]:checked) {
   color: color-mix(in srgb, var(--color-ink) 40%, transparent);
+}
+
+/* Barra de progresso do scroll */
+.scroll-progress {
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+
+/* Header compacto após sair do hero */
+[data-site-header] {
+  transition:
+    background-color 0.4s ease,
+    border-color 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+[data-site-header] .header-inner {
+  transition: height 0.35s ease;
+}
+
+[data-site-header].is-compact {
+  border-bottom-color: rgb(176 138 70 / 0.28);
+  background-color: rgb(14 19 23 / 0.88);
+  box-shadow: 0 12px 40px rgb(0 0 0 / 0.28);
+}
+
+[data-site-header].is-compact .header-inner {
+  height: 4.25rem;
+}
+
+.nav-link {
+  position: relative;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -0.35rem;
+  height: 1px;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left;
+  background: var(--color-gold-light);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.nav-link:hover::after,
+.nav-link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.btn-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgb(255 255 255 / 0.22) 50%,
+    transparent 65%
+  );
+  transform: translateX(-120%);
+  transition: transform 0.7s ease;
+}
+
+.btn-shine:hover::after {
+  transform: translateX(120%);
+}
+
+.lift-card {
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.35s ease,
+    box-shadow 0.45s ease;
+}
+
+.lift-card:hover {
+  transform: translateY(-7px);
+  box-shadow: 0 22px 44px rgb(14 19 23 / 0.08);
+}
+
+.lift-card-dark:hover {
+  transform: translateY(-7px);
+  box-shadow: 0 22px 50px rgb(0 0 0 / 0.35);
+}
+
+@keyframes gold-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.45;
+  }
+  100% {
+    transform: scale(1.85);
+    opacity: 0;
+  }
+}
+
+.gold-ring {
+  animation: gold-ring 2.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+.gold-ring-delay {
+  animation-delay: 0.8s;
+}
+
+/* Esconde o que o GSAP vai revelar — só com motion e JS ativos */
+@media (prefers-reduced-motion: no-preference) {
+  .js-motion [data-split],
+  .js-motion [data-hero-copy],
+  .js-motion [data-hero-item],
+  .js-motion [data-hero-cta],
+  .js-motion [data-hero-note],
+  .js-motion [data-hero-visual],
+  .js-motion [data-hero-kicker],
+  .js-motion [data-reveal]:not([data-reveal="clip"]),
+  .js-motion [data-reveal-stagger] > * {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .gold-ring,
+  .gold-ring-delay,
+  .btn-shine::after {
+    animation: none;
+    transition: none;
+  }
 }

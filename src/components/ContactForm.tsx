@@ -6,7 +6,7 @@ import { ChevronDownIcon, WhatsAppIcon } from "@/components/icons";
 import { whatsappUrl } from "@/lib/site";
 
 const fieldClass =
-  "w-full border border-ink/15 bg-white px-4 py-3 text-[13px] text-ink placeholder:text-ink/40 focus:border-gold focus:outline-none";
+  "w-full border border-ink/15 bg-white px-4 py-3.5 text-[0.9375rem] text-ink placeholder:text-ink/40 transition-colors focus:border-gold focus:outline-none";
 
 /** Select nativo + chevron desenhado, já que o indicador padrão não é estilizável. */
 function Select({ children }: { children: ReactNode }) {

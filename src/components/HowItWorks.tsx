@@ -40,39 +40,57 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section id="como-funciona" className="bg-cream py-16 text-ink sm:py-20">
+    <section id="como-funciona" className="bg-cream py-20 text-ink sm:py-24">
       <Container>
         <div className="text-center">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-gold-ink">
-            Como funciona
-          </p>
-          <h2 className="mt-4 font-serif text-[28px] leading-[1.2] text-ink sm:text-[33px]">
+          <div data-reveal="up" className="flex items-center justify-center gap-3">
+            <span data-draw className="inline-block h-px w-8 origin-left bg-gold" />
+            <p className="eyebrow text-gold-ink">Como funciona</p>
+            <span data-draw className="inline-block h-px w-8 origin-right bg-gold" />
+          </div>
+          <h2
+            data-split="chars"
+            className="section-title mt-5 text-[1.85rem] text-ink sm:text-[2.25rem]"
+          >
             Veja como funciona
           </h2>
         </div>
 
-        <ol className="mt-14 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-5 lg:gap-6">
-          {steps.map(({ icon: Icon, title, description }, index) => (
-            <li key={title}>
-              <div className="flex items-center gap-3">
-                <span className="flex size-[30px] shrink-0 items-center justify-center rounded-full bg-gold text-[12px] font-semibold text-white">
-                  {index + 1}
-                </span>
-                <Icon className="size-[26px] text-gold-ink" />
-              </div>
+        <div className="relative mt-16">
+          <div
+            data-draw
+            className="pointer-events-none absolute top-[15px] right-8 left-8 hidden h-px origin-left bg-gold/30 lg:block"
+          />
+          <ol
+            data-steps
+            data-reveal-stagger
+            className="relative grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-5 lg:gap-6"
+          >
+            {steps.map(({ icon: Icon, title, description }, index) => (
+              <li key={title}>
+                <div className="flex items-center gap-3">
+                  <span
+                    data-step-num
+                    className="flex size-[30px] shrink-0 items-center justify-center rounded-full bg-gold font-sans text-[0.75rem] font-semibold text-white"
+                  >
+                    {index + 1}
+                  </span>
+                  <Icon className="size-[26px] text-gold-ink" />
+                </div>
 
-              <h3 className="mt-5 font-serif text-[16px] leading-[1.35] text-ink">
-                {title}
-              </h3>
+                <h3 className="section-title mt-5 text-[1.12rem] leading-[1.35] text-ink">
+                  {title}
+                </h3>
 
-              <p className="mt-2.5 text-[12.5px] leading-[1.65] text-ink/55">
-                {description}
-              </p>
-            </li>
-          ))}
-        </ol>
+                <p className="mt-2.5 text-[0.9rem] leading-[1.7] text-ink/55">
+                  {description}
+                </p>
+              </li>
+            ))}
+          </ol>
+        </div>
 
-        <div className="mt-14 flex justify-center">
+        <div data-reveal="up" className="mt-16 flex justify-center">
           <Button href={whatsappUrl()} size="lg">
             Começar pelo WhatsApp
             <WhatsAppIcon className="size-[18px]" />
