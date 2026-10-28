@@ -1,9 +1,31 @@
 "use client";
 
-import type { FormEvent, ReactNode } from "react";
+import { useRouter } from "next/navigation";
+import { useState, type FormEvent, type ReactNode } from "react";
 import Button from "@/components/ui/Button";
 import { ChevronDownIcon, WhatsAppIcon } from "@/components/icons";
-import { whatsappUrl } from "@/lib/site";
+import { trackLeadInBrowser } from "@/components/tracking/track";
+import { saveLeadMessage } from "@/lib/lead-message";
+import { newEventId } from "@/lib/tracking/client";
+
+type Errors = Partial<Record<"name" | "email" | "phone" | "message" | "fields" | "_", string>>;
+
+const FIELD_PREFIX = "fields.";
+
+/** Todo input `name="fields.<chave>"` vira fields[chave] — é assim que as perguntas extras chegam ao CRM. */
+function extraFields(form: FormData): Record<string, string> | undefined {
+  const out: Record<string, string> = {};
+  for (const [name, value] of form.entries()) {
+    if (!name.startsWith(FIELD_PREFIX) || typeof value !== "string" || !value.trim()) continue;
+    out[name.slice(FIELD_PREFIX.length)] = value.trim();
+  }
+  return Object.keys(out).length ? out : undefined;
+}
+
+function FieldError({ message }: { message?: string }) {
+  if (!message) return null;
+  return <span className="mt-1.5 block text-[0.8125rem] text-red-700">{message}</span>;
+}
 
 const fieldClass =
   "w-full border border-ink/15 bg-white px-4 py-3.5 text-[0.9375rem] text-ink placeholder:text-ink/40 transition-colors focus:border-gold focus:outline-none";
@@ -29,60 +51,138 @@ const problemOptions = [
   "Outro / não sei dizer",
 ];
 
+/**
+ * Fluxo do lead (padrão do nextjs-tracking-template):
+ * 1. gera o event_id no browser
+ * 2. POST /api/lead → CRM + Meta CAPI + GA4 MP + Google Ads API (mesmo event_id)
+ * 3. se deu certo, dispara o Lead no browser com o mesmo id e vai para /obrigado,
+ *    que oferece continuar a conversa no WhatsApp com o relato já escrito.
+ */
 export default function ContactForm() {
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  const router = useRouter();
+  const [sending, setSending] = useState(false);
+  const [errors, setErrors] = useState<Errors>({});
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
+    if (sending) return;
+    const form = new FormData(event.currentTarget);
+    const get = (key: string) => String(form.get(key) ?? "").trim();
+    const eventId = newEventId();
+    const data = {
+      name: get("name"),
+      email: get("email"),
+      phone: get("phone"),
+      message: get("message") || undefined,
+      consent: form.get("consent") === "on",
+      fields: extraFields(form),
+      website: get("website"),
+      eventId,
+      pageUrl: window.location.href,
+    };
 
-    const get = (key: string) => String(data.get(key) ?? "").trim();
+    if (!data.consent) {
+      setErrors({ _: "Marque a autorização para podermos entrar em contato." });
+      return;
+    }
 
-    const message = [
-      "Olá! Gostaria de falar com o advogado.",
-      "",
-      `Nome: ${get("nome") || "—"}`,
-      `Cidade e estado: ${get("cidade") || "—"}`,
-      `Profissão ou função: ${get("profissao") || "—"}`,
-      `Ainda trabalha na empresa: ${get("vinculo") || "—"}`,
-      `Principal problema: ${get("problema") || "—"}`,
-      "",
-      "O que aconteceu:",
-      get("relato") || "—",
-    ].join("\n");
-
-    window.open(whatsappUrl(message), "_blank", "noopener,noreferrer");
+    setSending(true);
+    setErrors({});
+    try {
+      const res = await fetch("/api/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const json = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        errors?: Errors;
+        error?: string;
+      };
+      if (!res.ok || !json.ok) {
+        setErrors(json.errors ?? { _: json.error ?? "Não foi possível enviar. Tente novamente." });
+        return;
+      }
+      trackLeadInBrowser(eventId, { email: data.email, phone: data.phone });
+      saveLeadMessage(
+        [
+          "Olá! Gostaria de falar com o advogado.",
+          "",
+          `Nome: ${data.name}`,
+          `Cidade e estado: ${get("fields.cidade") || "—"}`,
+          `Profissão ou função: ${get("fields.profissao") || "—"}`,
+          `Ainda trabalha na empresa: ${get("fields.vinculo") || "—"}`,
+          `Principal problema: ${get("fields.problema") || "—"}`,
+          "",
+          "O que aconteceu:",
+          data.message || "—",
+        ].join("\n"),
+      );
+      router.push("/obrigado");
+    } catch {
+      setErrors({ _: "Sem conexão. Tente novamente." });
+    } finally {
+      setSending(false);
+    }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-4">
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <form
+      onSubmit={handleSubmit}
+      noValidate
+      data-testid="lead-form"
+      className="mt-8 flex flex-col gap-4"
+    >
+      <div>
         <input
-          name="nome"
+          name="name"
           type="text"
           required
+          autoComplete="name"
           placeholder="Nome completo"
           aria-label="Nome completo"
           className={fieldClass}
         />
-        <input
-          name="whatsapp"
-          type="tel"
-          required
-          placeholder="WhatsApp"
-          aria-label="WhatsApp"
-          className={fieldClass}
-        />
+        <FieldError message={errors.name} />
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div>
+          <input
+            name="phone"
+            type="tel"
+            required
+            autoComplete="tel"
+            placeholder="WhatsApp com DDD"
+            aria-label="WhatsApp com DDD"
+            className={fieldClass}
+          />
+          <FieldError message={errors.phone} />
+        </div>
+        <div>
+          <input
+            name="email"
+            type="email"
+            required
+            autoComplete="email"
+            placeholder="E-mail"
+            aria-label="E-mail"
+            className={fieldClass}
+          />
+          <FieldError message={errors.email} />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <input
-          name="cidade"
+          name="fields.cidade"
           type="text"
           placeholder="Cidade e estado"
           aria-label="Cidade e estado"
           className={fieldClass}
         />
         <input
-          name="profissao"
+          name="fields.profissao"
           type="text"
           placeholder="Profissão ou função"
           aria-label="Profissão ou função"
@@ -92,7 +192,7 @@ export default function ContactForm() {
 
       <Select>
         <select
-          name="vinculo"
+          name="fields.vinculo"
           defaultValue=""
           aria-label="Você ainda trabalha na empresa?"
           className={`${fieldClass} appearance-none pr-11`}
@@ -109,7 +209,7 @@ export default function ContactForm() {
 
       <Select>
         <select
-          name="problema"
+          name="fields.problema"
           defaultValue=""
           aria-label="Qual é o principal problema?"
           className={`${fieldClass} appearance-none pr-11`}
@@ -124,17 +224,26 @@ export default function ContactForm() {
       </Select>
 
       <textarea
-        name="relato"
+        name="message"
         rows={4}
         placeholder="Conte o que aconteceu"
         aria-label="Conte o que aconteceu"
         className={`${fieldClass} resize-y`}
       />
 
+      {/* honeypot: escondido de humanos */}
+      <input
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="absolute -left-[9999px] size-px opacity-0"
+      />
+
       <label className="flex items-start gap-2.5 text-[11.5px] leading-[1.55] text-ink/55">
         <input
           type="checkbox"
-          name="autorizacao"
+          name="consent"
           required
           className="mt-0.5 size-3.5 shrink-0 accent-[var(--color-gold)]"
         />
@@ -144,8 +253,11 @@ export default function ContactForm() {
         </span>
       </label>
 
-      <Button type="submit" size="md" className="mt-1 w-full">
-        Enviar e falar com o advogado
+      {errors.fields && <FieldError message={errors.fields} />}
+      {errors._ && <FieldError message={errors._} />}
+
+      <Button type="submit" size="md" className="mt-1 w-full" disabled={sending}>
+        {sending ? "Enviando…" : "Enviar e falar com o advogado"}
         <WhatsAppIcon className="size-4" />
       </Button>
 

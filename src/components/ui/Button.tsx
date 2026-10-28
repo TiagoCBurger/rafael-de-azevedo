@@ -30,6 +30,7 @@ export default function Button({
   size = "md",
   className = "",
   type,
+  disabled,
 }: {
   href?: string;
   children: ReactNode;
@@ -37,6 +38,7 @@ export default function Button({
   size?: Size;
   className?: string;
   type?: "button" | "submit";
+  disabled?: boolean;
 }) {
   const classes = `${base} ${variants[variant]} ${sizes[size]} ${className}`;
 
@@ -54,7 +56,11 @@ export default function Button({
   }
 
   return (
-    <button type={type ?? "button"} className={classes}>
+    <button
+      type={type ?? "button"}
+      disabled={disabled}
+      className={`${classes} disabled:cursor-wait disabled:opacity-60`}
+    >
       {children}
     </button>
   );

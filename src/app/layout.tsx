@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Outfit } from "next/font/google";
+import { Suspense } from "react";
+import ConsentBanner from "@/components/ConsentBanner";
 import MotionRoot from "@/components/motion/MotionRoot";
+import { PageViewTracker } from "@/components/tracking/PageViewTracker";
+import { GtmNoscript, TrackingHead } from "@/components/tracking/TrackingScripts";
+import WhatsAppClickTracker from "@/components/tracking/WhatsAppClickTracker";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -21,6 +26,9 @@ export const metadata: Metadata = {
   title: "Raphael de Azevedo — Advogado Trabalhista",
   description:
     "Fale diretamente com um advogado trabalhista e explique o que aconteceu. Demissão, horas extras, acidente de trabalho, assédio, salário atrasado, FGTS e outros direitos.",
+  metadataBase: process.env.NEXT_PUBLIC_SITE_URL
+    ? new URL(process.env.NEXT_PUBLIC_SITE_URL)
+    : undefined,
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -30,7 +38,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
       className={`${outfit.variable} ${cormorant.variable} h-full antialiased`}
     >
+      <head>
+        <TrackingHead />
+      </head>
       <body className="min-h-full bg-ink">
+        <GtmNoscript />
+        <Suspense fallback={null}>
+          <PageViewTracker />
+        </Suspense>
+        <WhatsAppClickTracker />
         <noscript>
           <style>{`
             .js-motion [data-split],
@@ -45,6 +61,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           `}</style>
         </noscript>
         <MotionRoot>{children}</MotionRoot>
+        <ConsentBanner />
       </body>
     </html>
   );
