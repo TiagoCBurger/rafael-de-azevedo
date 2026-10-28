@@ -18,22 +18,24 @@ export default function Hero() {
         aria-hidden
       />
 
-      <div
-        data-hero-visual
-        data-parallax="10"
-        className="pointer-events-none absolute inset-y-0 right-0 hidden w-[52%] lg:block"
-      >
-        <MediaSlot
-          src={media.hero}
-          alt="Raphael de Azevedo, advogado trabalhista, em seu escritório"
-          label="Foto do advogado"
-          priority
-          sizes="52vw"
-          className="h-full w-full"
-          imageClassName="object-cover object-[30%_center]"
-        />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,var(--color-ink)_0%,rgba(14,19,23,0.82)_20%,rgba(14,19,23,0.1)_50%,rgba(14,19,23,0.3)_100%)]" />
-      </div>
+      {media.hero && (
+        <div
+          data-hero-visual
+          data-parallax="10"
+          className="pointer-events-none absolute inset-y-0 right-0 hidden w-[52%] lg:block"
+        >
+          <MediaSlot
+            src={media.hero}
+            alt="Raphael de Azevedo, advogado trabalhista, em seu escritório"
+            label="Foto do advogado"
+            priority
+            sizes="52vw"
+            className="h-full w-full"
+            imageClassName="object-cover object-[30%_center]"
+          />
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,var(--color-ink)_0%,rgba(14,19,23,0.82)_20%,rgba(14,19,23,0.1)_50%,rgba(14,19,23,0.3)_100%)]" />
+        </div>
+      )}
 
       <Container className="relative py-16 sm:py-20 lg:py-20">
         <div className="max-w-xl">

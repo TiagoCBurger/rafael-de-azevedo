@@ -23,18 +23,20 @@ const segments = [
 export default function SpecificService() {
   return (
     <section className="relative isolate overflow-hidden bg-ink-deep">
-      <div
-        data-parallax="8"
-        className="pointer-events-none absolute inset-0 -z-10 opacity-[0.18]"
-      >
-        <MediaSlot
-          src={media.specialties}
-          alt=""
-          label="Cenário bancos e petróleo"
-          sizes="100vw"
-          className="h-full w-full"
-        />
-      </div>
+      {media.specialties && (
+        <div
+          data-parallax="8"
+          className="pointer-events-none absolute inset-0 -z-10 opacity-[0.18]"
+        >
+          <MediaSlot
+            src={media.specialties}
+            alt=""
+            label="Cenário bancos e petróleo"
+            sizes="100vw"
+            className="h-full w-full"
+          />
+        </div>
+      )}
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(180deg,var(--color-ink-deep)_0%,rgba(9,13,16,0.6)_45%,var(--color-ink-deep)_100%)]" />
 
       <Container className="py-20 sm:py-24">

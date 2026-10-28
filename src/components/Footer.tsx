@@ -20,11 +20,12 @@ const practiceAreas = [
   "Rescisão indireta",
 ];
 
+/** Redes com link "#" ficam ocultas até o endereço real ser preenchido em `site.social`. */
 const socials = [
   { icon: InstagramIcon, href: site.social.instagram, label: "Instagram" },
   { icon: LinkedInIcon, href: site.social.linkedin, label: "LinkedIn" },
   { icon: WhatsAppIcon, href: whatsappUrl(), label: "WhatsApp" },
-];
+].filter(({ href }) => href !== "#");
 
 export default function Footer() {
   return (
@@ -103,22 +104,6 @@ export default function Footer() {
         </div>
       </Container>
 
-      <div className="border-t border-white/[0.07]">
-        <Container className="flex flex-col items-center justify-center gap-4 py-5 sm:flex-row sm:gap-10">
-          <a
-            href="#"
-            className="text-[0.75rem] text-cream/40 transition-colors hover:text-gold-light"
-          >
-            Política de Privacidade
-          </a>
-          <a
-            href="#"
-            className="text-[0.75rem] text-cream/40 transition-colors hover:text-gold-light"
-          >
-            Termos de Uso
-          </a>
-        </Container>
-      </div>
     </footer>
   );
 }
