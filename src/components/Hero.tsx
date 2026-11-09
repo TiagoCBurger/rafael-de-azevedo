@@ -31,7 +31,7 @@ export default function Hero() {
             priority
             sizes="52vw"
             className="h-full w-full"
-            imageClassName="object-cover object-[30%_center]"
+            imageClassName="object-cover object-[45%_22%]"
           />
           <div className="absolute inset-0 bg-[linear-gradient(90deg,var(--color-ink)_0%,rgba(14,19,23,0.82)_20%,rgba(14,19,23,0.1)_50%,rgba(14,19,23,0.3)_100%)]" />
         </div>
@@ -40,6 +40,17 @@ export default function Hero() {
       <Container className="relative py-16 sm:py-20 lg:py-20">
         <div className="max-w-xl">
           <div data-hero-kicker className="flex items-center gap-3">
+            {media.hero && (
+              <MediaSlot
+                src={media.hero}
+                alt="Raphael de Azevedo, advogado trabalhista"
+                label="Foto do advogado"
+                priority
+                sizes="64px"
+                className="size-14 shrink-0 rounded-full ring-1 ring-gold/50 lg:hidden"
+                imageClassName="object-cover object-[45%_22%] scale-[1.6] origin-[45%_28%]"
+              />
+            )}
             <span data-draw className="inline-block h-px w-9 origin-left bg-gold" />
             <p className="eyebrow text-gold-light">Advogado Trabalhista</p>
           </div>

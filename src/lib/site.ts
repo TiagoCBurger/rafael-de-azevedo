@@ -26,7 +26,7 @@ export function whatsappUrl(message = "Olá! Gostaria de falar sobre um problema
  * enquanto forem `undefined`, o layout renderiza um placeholder do tamanho certo.
  */
 export const media: Record<"hero" | "video" | "specialties", string | undefined> = {
-  hero: undefined, // ex.: "/images/advogado-escritorio.jpg"
+  hero: "/images/raphael-de-azevedo.jpg", // retrato P&B (1080×1440)
   video: undefined, // ex.: "/images/capa-video.jpg"
   specialties: undefined, // ex.: "/images/bancarios-petroleo.jpg"
 };
