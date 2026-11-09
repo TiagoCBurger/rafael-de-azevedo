@@ -62,8 +62,10 @@ describe('formatos de id', () => {
 })
 
 describe('modo gtm × direct', () => {
-  it('gtm sem GTM_ID é erro', () => {
-    expectError(fullEnv({ NEXT_PUBLIC_TRACKING_MODE: 'gtm' }), /Modo "gtm" exige NEXT_PUBLIC_GTM_ID/)
+  it('gtm sem GTM_ID passa, com aviso', () => {
+    const env = fullEnv({ NEXT_PUBLIC_TRACKING_MODE: 'gtm' })
+    expect(errorsOf(env)).toEqual([])
+    expect(warningsOf(env).join()).toMatch(/Modo "gtm" sem NEXT_PUBLIC_GTM_ID/)
   })
 
   it('gtm com GTM_ID válido passa', () => {
