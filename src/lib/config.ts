@@ -383,7 +383,8 @@ export function validateTrackingConfig(env: Env): ValidationResult {
 
   // --- Regras por modo ---
   if (pub.mode === 'gtm') {
-    if (!pub.gtmId) errors.push('Modo "gtm" exige NEXT_PUBLIC_GTM_ID.')
+    if (!pub.gtmId)
+      warnings.push('Modo "gtm" sem NEXT_PUBLIC_GTM_ID: o container não é carregado e nenhuma tag dispara no browser (os eventos só ficam no dataLayer). Defina o GTM_ID e faça novo deploy.')
   } else {
     if (pub.gtmId)
       warnings.push('NEXT_PUBLIC_GTM_ID definido mas o modo é "direct": o GTM NÃO será carregado. Se o GTM também tiver pixel/GA4, haveria disparo duplicado.')
