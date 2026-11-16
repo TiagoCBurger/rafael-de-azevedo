@@ -8,17 +8,20 @@ import { GtmNoscript, TrackingHead } from "@/components/tracking/TrackingScripts
 import WhatsAppClickTracker from "@/components/tracking/WhatsAppClickTracker";
 import "./globals.css";
 
+// Só o subconjunto "latin": já cobre todos os acentos do português.
+// O "latin-ext" dobrava os arquivos de fonte baixados no carregamento.
 const outfit = Outfit({
   variable: "--font-outfit",
-  subsets: ["latin", "latin-ext"],
+  subsets: ["latin"],
   display: "swap",
 });
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
-  subsets: ["latin", "latin-ext"],
+  subsets: ["latin"],
   display: "swap",
-  weight: ["400", "500", "600", "700"],
+  // O site só usa 400 (logo) e 500 (títulos e <em>).
+  weight: ["400", "500"],
   style: ["normal", "italic"],
 });
 
@@ -50,12 +53,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <noscript>
           <style>{`
             .js-motion [data-split],
-            .js-motion [data-hero-copy],
-            .js-motion [data-hero-item],
-            .js-motion [data-hero-cta],
-            .js-motion [data-hero-note],
-            .js-motion [data-hero-visual],
-            .js-motion [data-hero-kicker],
             .js-motion [data-reveal]:not([data-reveal="clip"]),
             .js-motion [data-reveal-stagger] > * { opacity: 1 !important; }
           `}</style>

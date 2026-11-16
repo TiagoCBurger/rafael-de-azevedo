@@ -189,15 +189,120 @@ select:has(option[value=""]:checked) {
 /* Esconde o que o GSAP vai revelar — só com motion e JS ativos */
 @media (prefers-reduced-motion: no-preference) {
   .js-motion [data-split],
-  .js-motion [data-hero-copy],
-  .js-motion [data-hero-item],
-  .js-motion [data-hero-cta],
-  .js-motion [data-hero-note],
-  .js-motion [data-hero-visual],
-  .js-motion [data-hero-kicker],
   .js-motion [data-reveal]:not([data-reveal="clip"]),
-  .js-motion [data-reveal-stagger] > * {
+  .js-motion [data-reveal-stagger]:not([data-reveal-stagger="load"]) > * {
     opacity: 0;
+  }
+}
+
+/*
+ * Entrada do topo (hero + menu) em CSS puro. Roda desde o primeiro quadro,
+ * sem esperar o JavaScript, para o texto principal aparecer cedo (LCP).
+ * Mesmos tempos e curvas da timeline GSAP que existia antes.
+ * Usa as propriedades `translate`/`scale` (e não `transform`) e
+ * `fill-mode: backwards` para não brigar com o parallax do GSAP depois.
+ */
+.hero-word {
+  display: inline-block;
+  overflow: clip;
+  vertical-align: top;
+  padding-block: 0.12em;
+  margin-block: -0.12em;
+}
+
+.hero-char {
+  display: inline-block;
+  backface-visibility: hidden;
+}
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    translate: 0 var(--rise, 28px);
+  }
+}
+
+@keyframes hero-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes hero-char {
+  from {
+    translate: 0 118%;
+  }
+}
+
+@keyframes hero-draw {
+  from {
+    scale: 0 1;
+  }
+}
+
+@keyframes hero-slide {
+  from {
+    opacity: 0;
+    translate: 40px 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-site-header] {
+    animation: hero-fade 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) backwards;
+  }
+
+  [data-reveal-stagger="load"] > * {
+    --rise: 28px;
+    animation: hero-rise 0.72s cubic-bezier(0.165, 0.84, 0.44, 1) backwards;
+    animation-delay: calc(0.25s + var(--stagger, 0) * 0.1s);
+  }
+  [data-reveal-stagger="load"] > :nth-child(2) { --stagger: 1; }
+  [data-reveal-stagger="load"] > :nth-child(3) { --stagger: 2; }
+  [data-reveal-stagger="load"] > :nth-child(4) { --stagger: 3; }
+  [data-reveal-stagger="load"] > :nth-child(5) { --stagger: 4; }
+  [data-reveal-stagger="load"] > :nth-child(6) { --stagger: 5; }
+
+  [data-hero-kicker] {
+    --rise: 12px;
+    animation: hero-rise 0.55s cubic-bezier(0.215, 0.61, 0.355, 1) 0.08s backwards;
+  }
+
+  [data-hero-kicker] [data-draw] {
+    transform-origin: left center;
+    animation: hero-draw 0.8s cubic-bezier(0.645, 0.045, 0.355, 1) 0.16s backwards;
+  }
+
+  .hero-char {
+    animation: hero-char 0.8s cubic-bezier(0.23, 1, 0.32, 1) backwards;
+    animation-delay: calc(0.18s + var(--i, 0) * 0.018s);
+  }
+
+  /*
+   * O parágrafo do topo é o maior texto da tela no celular (o elemento do
+   * LCP). Ele não tem fade: o Chrome só conta o LCP quando o fade termina,
+   * e isso custava ~2,5 s na nota do PageSpeed.
+   */
+
+  [data-hero-item] {
+    --rise: 18px;
+    animation: hero-rise 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) backwards;
+    animation-delay: 0.7s;
+  }
+  [data-hero-item]:nth-child(2) { animation-delay: 0.78s; }
+  [data-hero-item]:nth-child(3) { animation-delay: 0.86s; }
+
+  [data-hero-cta] {
+    --rise: 18px;
+    animation: hero-rise 0.55s cubic-bezier(0.165, 0.84, 0.44, 1) 0.86s backwards;
+  }
+
+  [data-hero-note] {
+    animation: hero-fade 0.5s cubic-bezier(0.215, 0.61, 0.355, 1) 1.03s backwards;
+  }
+
+  [data-hero-visual] {
+    animation: hero-slide 1.05s cubic-bezier(0.165, 0.84, 0.44, 1) 0.28s backwards;
   }
 }
 

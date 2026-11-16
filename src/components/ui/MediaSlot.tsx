@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { srcSetFor } from "@/lib/images";
 
 /**
  * Renderiza a imagem quando `src` existe; caso contrário, mantém o espaço
@@ -21,6 +22,28 @@ export default function MediaSlot({
   className?: string;
   imageClassName?: string;
 }) {
+  const responsive = src ? srcSetFor(src) : undefined;
+
+  if (responsive) {
+    // Foto com versões WebP prontas (ver src/lib/images.ts): o navegador
+    // escolhe a largura certa sem depender do otimizador do servidor.
+    return (
+      <div className={`relative overflow-hidden ${className}`}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={responsive.src}
+          srcSet={responsive.srcSet}
+          sizes={sizes}
+          alt={alt}
+          decoding="async"
+          loading={priority ? "eager" : "lazy"}
+          fetchPriority={priority ? "high" : undefined}
+          className={`absolute inset-0 h-full w-full ${imageClassName}`}
+        />
+      </div>
+    );
+  }
+
   if (src) {
     return (
       <div className={`relative overflow-hidden ${className}`}>
