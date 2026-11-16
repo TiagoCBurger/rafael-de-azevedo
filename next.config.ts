@@ -7,6 +7,11 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.join(import.meta.dirname, "."),
   },
+  experimental: {
+    // CSS (Tailwind, ~8 KB) vai embutido no HTML: elimina a requisição de
+    // CSS que bloqueava a primeira pintura no celular.
+    inlineCss: true,
+  },
 };
 
 export default nextConfig;

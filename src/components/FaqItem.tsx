@@ -1,8 +1,6 @@
 "use client";
 
-import { useId, useRef, useState } from "react";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
+import { useId, useState } from "react";
 import { PlusIcon } from "@/components/icons";
 
 export default function FaqItem({
@@ -13,24 +11,7 @@ export default function FaqItem({
   answer: string;
 }) {
   const [open, setOpen] = useState(false);
-  const panelRef = useRef<HTMLDivElement>(null);
   const id = useId();
-
-  useGSAP(
-    () => {
-      const panel = panelRef.current;
-      if (!panel) return;
-
-      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-      gsap.to(panel, {
-        height: open ? "auto" : 0,
-        duration: reduce ? 0 : 0.45,
-        ease: "power2.inOut",
-      });
-    },
-    { dependencies: [open] },
-  );
 
   return (
     <div
@@ -52,10 +33,19 @@ export default function FaqItem({
           }`}
         />
       </button>
-      <div id={id} ref={panelRef} className="h-0 overflow-hidden">
-        <p className="border-t border-white/[0.07] px-5 py-4 font-sans text-[0.9rem] leading-[1.75] text-cream/55">
-          {answer}
-        </p>
+      {/* Abre/fecha em CSS (grid 0fr → 1fr), mesmo efeito da animação GSAP
+          anterior; assim o GSAP não entra no JavaScript inicial da página. */}
+      <div
+        id={id}
+        className={`grid transition-[grid-template-rows] duration-[450ms] ease-[cubic-bezier(0.645,0.045,0.355,1)] motion-reduce:transition-none ${
+          open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+        }`}
+      >
+        <div className="min-h-0 overflow-hidden">
+          <p className="border-t border-white/[0.07] px-5 py-4 font-sans text-[0.9rem] leading-[1.75] text-cream/55">
+            {answer}
+          </p>
+        </div>
       </div>
     </div>
   );

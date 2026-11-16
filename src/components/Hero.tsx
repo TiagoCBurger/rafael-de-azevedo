@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import Button from "@/components/ui/Button";
 import Container from "@/components/ui/Container";
 import MediaSlot from "@/components/ui/MediaSlot";
@@ -9,6 +10,60 @@ const highlights = [
   { icon: UserIcon, lines: ["Contato direto", "com o advogado"] },
   { icon: ShieldIcon, lines: ["Conversa com", "sigilo e respeito"] },
 ];
+
+// Título dividido em letras já no HTML do servidor: a animação de entrada
+// roda em CSS desde o primeiro quadro, sem esperar o JavaScript carregar.
+const titleLines: { text: string; em?: boolean }[][] = [
+  [{ text: "Está com algum" }],
+  [{ text: "problema", em: true }, { text: " no trabalho?" }],
+];
+
+function HeroTitle() {
+  let charIndex = 0;
+
+  const renderWords = (text: string) =>
+    text.split(/(\s+)/).map((part, i) => {
+      if (!part) return null;
+      if (/^\s+$/.test(part)) return " ";
+      return (
+        <span key={i} className="hero-word">
+          {Array.from(part).map((char, j) => (
+            <span
+              key={j}
+              className="hero-char"
+              style={{ "--i": charIndex++ } as CSSProperties}
+            >
+              {char}
+            </span>
+          ))}
+        </span>
+      );
+    });
+
+  return (
+    <>
+      <span className="sr-only">
+        {titleLines.map((line) => line.map((part) => part.text).join("")).join(" ")}
+      </span>
+      <span aria-hidden>
+        {titleLines.map((line, li) => (
+          <span key={li}>
+            {li > 0 && <br />}
+            {line.map((part, pi) =>
+              part.em ? (
+                <em key={pi} className="text-gold-light">
+                  {renderWords(part.text)}
+                </em>
+              ) : (
+                <span key={pi}>{renderWords(part.text)}</span>
+              ),
+            )}
+          </span>
+        ))}
+      </span>
+    </>
+  );
+}
 
 export default function Hero() {
   return (
@@ -29,7 +84,9 @@ export default function Hero() {
             alt="Raphael de Azevedo, advogado trabalhista, em seu escritório"
             label="Foto do advogado"
             priority
-            sizes="52vw"
+            // No celular esta foto fica escondida: "1px" faz o navegador
+            // baixar só a menor versão (1,5 KB) em vez da foto inteira.
+            sizes="(min-width: 1024px) 52vw, 1px"
             className="h-full w-full"
             imageClassName="object-cover object-[45%_22%]"
           />
@@ -46,7 +103,7 @@ export default function Hero() {
                 alt="Raphael de Azevedo, advogado trabalhista"
                 label="Foto do advogado"
                 priority
-                sizes="64px"
+                sizes="90px"
                 className="size-14 shrink-0 rounded-full ring-1 ring-gold/50 lg:hidden"
                 imageClassName="object-cover object-[45%_22%] scale-[1.6] origin-[45%_28%]"
               />
@@ -55,14 +112,8 @@ export default function Hero() {
             <p className="eyebrow text-gold-light">Advogado Trabalhista</p>
           </div>
 
-          <h1
-            data-split="chars"
-            data-split-play="load"
-            className="display-title mt-5 text-[2.45rem] text-cream sm:text-[3.2rem] lg:text-[3.75rem]"
-          >
-            Está com algum
-            <br />
-            <em className="text-gold-light">problema</em> no trabalho?
+          <h1 className="display-title mt-5 text-[2.45rem] text-cream sm:text-[3.2rem] lg:text-[3.75rem]">
+            <HeroTitle />
           </h1>
 
           <p
